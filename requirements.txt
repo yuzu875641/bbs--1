@@ -2,4 +2,3 @@ fastapi
 uvicorn
 starlette
 itsdangerous
-sqlite3
