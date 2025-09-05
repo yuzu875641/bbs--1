@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ログイン</title>
+    <style>
+        body { font-family: sans-serif; max-width: 400px; margin: auto; padding: 20px; }
+        form { padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        input[type="text"], input[type="password"] { width: 98%; padding: 5px; margin-top: 5px; }
+        input[type="submit"] { padding: 10px; background-color: #0066cc; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>ログイン</h1>
+    <form action="/login" method="post">
+        <label for="username">ユーザー名:</label><br>
+        <input type="text" id="username" name="username" required><br>
+        <label for="password">パスワード:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+        <input type="submit" value="ログイン">
+    </form>
+    <p>テストアカウント: ユーザー名 `admin`, パスワード `password123`</p>
+</body>
+</html>
