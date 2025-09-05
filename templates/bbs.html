@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>統合版 掲示板</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; }
+        .message { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+        .name { font-weight: bold; color: #0066cc; }
+        .timestamp { font-size: 0.8em; color: #666; float: right; }
+        .actions { font-size: 0.9em; margin-top: 5px; }
+        form { margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        input[type="text"], textarea { width: 98%; padding: 5px; margin-top: 5px; }
+        input[type="submit"] { padding: 10px; background-color: #0066cc; color: white; border: none; cursor: pointer; }
+        .pagination { text-align: center; margin-top: 20px; }
+        .pagination a, .pagination span { padding: 8px 12px; border: 1px solid #ccc; margin: 0 4px; text-decoration: none; color: #333; }
+        .pagination .current-page { background-color: #0066cc; color: white; border: 1px solid #0066cc; }
+        .logout-link { float: right; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <h1>統合版 掲示板</h1>
+    
+    {% if logged_in %}
+        <a href="/logout" class="logout-link">ログアウト</a>
+        <form action="/post" method="post">
+            <label for="message">メッセージ:</label><br>
+            <textarea id="message" name="message" rows="4" required></textarea><br><br>
+            <input type="submit" value="投稿する">
+        </form>
+    {% else %}
+        <p>投稿するには<a href="/login">ログイン</a>してください。</p>
+    {% endif %}
+
+    <h2>メッセージ一覧</h2>
+    <div id="messages">
+        {% for message in messages %}
+        <div class="message">
+            <span class="name">{{ message.name }}</span>
+            <span class="timestamp">{{ message.timestamp }}</span><br>
+            <p>{{ message.message }}</p>
+            {% if logged_in and request.session.user == message.name %}
+            <div class="actions">
+                <form action="/delete/{{ message.id }}" method="post" style="display:inline;">
+                    <input type="submit" value="削除" onclick="return confirm('本当に削除しますか？');">
+                </form>
+                <form action="/edit/{{ message.id }}" method="post" style="display:inline;">
+                    <textarea name="new_message" rows="1" cols="30" required>{{ message.message }}</textarea>
+                    <input type="submit" value="編集">
+                </form>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        {% if current_page > 1 %}
+        <a href="?page={{ current_page - 1 }}">前へ</a>
+        {% endif %}
+
+        {% for p in range(1, total_pages + 1) %}
+            {% if p == current_page %}
+            <span class="current-page">{{ p }}</span>
+            {% else %}
+            <a href="?page={{ p }}">{{ p }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if current_page < total_pages %}
+        <a href="?page={{ current_page + 1 }}">次へ</a>
+        {% endif %}
+    </div>
+</body>
+</html>
